@@ -7,3 +7,7 @@
 
 ## Objectif à long terme
 Faire une prévision d'un signal qui permettrait de prédire **quand acheter** et **quand vendre**.
+
+__
+# To do list
+-Ajouter plus de parametre dans le X pour éviter un rmse instable dans les tests
