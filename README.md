@@ -1,7 +1,9 @@
 # Projet Crypto
-
-- **candlestick.py** → Ancien modèle utilisé (Linear Regression), toujours fonctionnel  
 - **main.py** → RandomForest ✔️ Nouveau modèle utilisé
+
+## Nouveauté 
+
+- Création d'un cache de téléchargement des donnée Ticker par Yfinance
 
 ## Objectif à long terme
 Faire une prévision d'un signal qui permettrait de prédire **quand acheter** et **quand vendre**.
