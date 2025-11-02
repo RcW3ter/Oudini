@@ -1,8 +1,11 @@
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import TimeSeriesSplit
+from sklearn.metrics import mean_absolute_error ,mean_squared_error
 import yfinance as yf
 import os
 import pandas as pd
 import datetime
+import numpy as np
 
 type_ = 'd'
 
@@ -41,10 +44,28 @@ df = df.dropna()
 X_values = df.loc[:, df.columns != 'Y'].values
 y_values = df['Y'].values.ravel()
 
+tscv_gap = TimeSeriesSplit(n_splits=8, test_size=120, gap=4)
+
+print("\n=== TimeSeriesSplit ===")
+for i, (train_index, test_index) in enumerate(tscv_gap.split(X_values)):
+    print(f"\nFold {i+1}")
+    print(f"Train indices: {train_index[0]} -> {train_index[-1]} | Test indices: {test_index[0]} -> {test_index[-1]}")
+
+    X_train, X_test = X_values[train_index], X_values[test_index]
+    y_train, y_test = y_values[train_index], y_values[test_index]
+
+    model = RandomForestRegressor(n_estimators=200, random_state=42)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    mae = mean_absolute_error(y_test, y_pred)
+    rmse = mean_squared_error(y_test, y_pred)
+    print(f"MAE: {mae:.2f}, RMSE: {rmse:.2f}")
+
 RFR = RandomForestRegressor(n_estimators=250, random_state=42)
 RFR.fit(X_values, y_values)
 
-print("Score R² :", RFR.score(X_values, y_values))
+print("\nScore R² :", RFR.score(X_values, y_values))
 
 x_new = X_values[-1].reshape(1, -1)  
 y_pred = RFR.predict(x_new)
